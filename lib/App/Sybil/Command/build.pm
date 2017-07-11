@@ -14,13 +14,23 @@ sub abstract { "Build your software" };
 sub description { "Does a release build of your software package." };
 
 sub _build {
-  my ($self, $target, @opts) = @_;
+  my ($self, $target, $file, @opts) = @_;
 
-  my ($stdout, $stderr, $exit) = tee {
-    system('bazel', 'build', '-c', 'opt', $target, @opts);
-  };
+  system('bazel', 'build', '-c', 'opt', ":$target", @opts);
 
-  return $exit == 0;
+  if ($? == -1) {
+    say STDERR "Build failed";
+    return;
+  }
+
+  # TODO improve result name detection
+  my $extension = substr($file, -3);
+  unless (copy("bazel-bin/$target.$extension", $file)) {
+    say STDERR "Copy $target.$extension failed: $!";
+    return;
+  }
+
+  say STDERR "Build complete";
 }
 
 sub _linux_build {
@@ -29,9 +39,10 @@ sub _linux_build {
   my $project = $self->project;
   my $version = $self->version;
 
-  $self->_build(":$project-linux") or exit 1;
-  my $file = "$project-$version-linux.tgz";
-  copy("bazel-bin/$project-linux.tgz", $file) or say STDERR "copy failed: $!";
+  # TODO autodetect build rule
+  my $target = "$project-linux";
+  my $file   = "$project-$version-linux.tgz";
+  $self->_build($target, $file);
 }
 
 sub _windows_build {
@@ -40,13 +51,13 @@ sub _windows_build {
   my $project = $self->project;
   my $version = $self->version;
 
-  my @options = (
-    '--crosstool_top', '@mxebzl//tools/windows:toolchain',
-    '--cpu', $cpu,
-  );
-  $self->_build(":$project-windows", @options) or exit 1;
-  my $file = "$project-$version-$cpu.zip";
-  copy("bazel-bin/$project-windows.zip", $file) or say STDERR "copy failed: $!";
+  my @options =
+    ('--crosstool_top', '@mxebzl//tools/windows:toolchain', '--cpu', $cpu,);
+
+  # TODO autodetect build rule
+  my $target = "$project-windows";
+  my $file   = "$project-$version-$cpu.zip";
+  $self->_build($target, $file, @options);
 }
 
 sub _osx_build {
