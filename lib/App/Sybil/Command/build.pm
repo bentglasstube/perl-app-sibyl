@@ -9,28 +9,28 @@ use base 'App::Sybil::base';
 use Capture::Tiny ':all';
 use File::Copy;
 
-sub abstract { "Build your software" };
+sub abstract { 'Build your software' }
 
-sub description { "Does a release build of your software package." };
+sub description { 'Does a release build of your software package.' }
 
 sub _build {
   my ($self, $target, $file, @opts) = @_;
 
-  system('bazel', 'build', '-c', 'opt', ":$target", @opts);
+  system 'bazel', 'build', '-c', 'opt', ":$target", @opts;
 
   if ($? == -1) {
-    say STDERR "Build failed";
+    say STDERR 'Build failed';
     return;
   }
 
   # TODO improve result name detection
-  my $extension = substr($file, -3);
+  my $extension = substr $file, -3;
   unless (copy("bazel-bin/$target.$extension", $file)) {
     say STDERR "Copy $target.$extension failed: $!";
     return;
   }
 
-  say STDERR "Build complete";
+  say STDERR 'Build complete';
 }
 
 sub _linux_build {
@@ -63,7 +63,7 @@ sub _windows_build {
 sub _osx_build {
   my ($self) = @_;
 
-  say STDERR "OSX builds not yet supported";
+  say STDERR 'OSX builds not yet supported';
 }
 
 sub execute {

@@ -1,5 +1,8 @@
 package App::Sybil::base;
 
+use strict;
+use warnings;
+
 use App::Sybil -command;
 use Capture::Tiny ':all';
 use File::Spec;
@@ -23,7 +26,7 @@ sub _get_version_from_git {
 
   # TODO allow options
   my $version = capture_stdout {
-    system('git', 'describe', '--dirty', '--tags');
+    system 'git', 'describe', '--dirty', '--tags';
   };
   chomp $version;
 

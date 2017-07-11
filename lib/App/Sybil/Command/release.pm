@@ -6,9 +6,9 @@ use v5.12;
 
 use base 'App::Sybil::base';
 
-sub abstract { "Release your software" };
+sub abstract { 'Release your software' }
 
-sub description { "Publishes your current version as a github release" };
+sub description { 'Publishes your current version as a github release' }
 
 sub execute {
   my ($self, $opt, $args) = @_;
@@ -22,7 +22,8 @@ sub execute {
   # }
 
   say STDERR "Publishing $project $version to github.";
-  say STDERR "Github publishing not yet implemented.";
+  say STDERR 'Github publishing not yet implemented.';
+
   # TODO implement
 }
 
