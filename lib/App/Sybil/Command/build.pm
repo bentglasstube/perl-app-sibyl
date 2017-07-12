@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use v5.12;
 
-use base 'App::Sybil::base';
+use App::Sybil -command;
 
 use Capture::Tiny ':all';
 use File::Copy;
@@ -36,8 +36,8 @@ sub _build {
 sub _linux_build {
   my ($self) = @_;
 
-  my $project = $self->project;
-  my $version = $self->version;
+  my $project = $self->app->project;
+  my $version = $self->app->version;
 
   # TODO autodetect build rule
   my $target = "$project-linux";
@@ -48,8 +48,8 @@ sub _linux_build {
 sub _windows_build {
   my ($self, $cpu) = @_;
 
-  my $project = $self->project;
-  my $version = $self->version;
+  my $project = $self->app->project;
+  my $version = $self->app->version;
 
   my @options =
     ('--crosstool_top', '@mxebzl//tools/windows:toolchain', '--cpu', $cpu,);

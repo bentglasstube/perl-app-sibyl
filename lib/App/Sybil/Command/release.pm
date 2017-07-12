@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use v5.12;
 
-use base 'App::Sybil::base';
+use App::Sybil -command;
 
 sub abstract { 'Release your software' }
 
@@ -13,8 +13,8 @@ sub description { 'Publishes your current version as a github release' }
 sub execute {
   my ($self, $opt, $args) = @_;
 
-  my $project = $self->project;
-  my $version = $self->version;
+  my $project = $self->app->project;
+  my $version = $self->app->version;
 
   # TODO implement
   # unless ($self->has_build($version)) {
