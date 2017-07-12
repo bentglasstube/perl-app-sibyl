@@ -14,7 +14,7 @@ sub abstract { 'Build your software' }
 sub description { 'Does a release build of your software package.' }
 
 sub _build {
-  my ($self, $target, $file, @opts) = @_;
+  my ($self, $target, @opts) = @_;
 
   system 'bazel', 'build', '-c', 'opt', ":$target", @opts;
 
@@ -24,6 +24,7 @@ sub _build {
   }
 
   # TODO improve result name detection
+  my $file = $self->app->output_file($target, $self->app->version);
   my $extension = substr $file, -3;
   unless (copy("bazel-bin/$target.$extension", $file)) {
     say STDERR "Copy $target.$extension failed: $!";
@@ -41,8 +42,7 @@ sub _linux_build {
 
   # TODO autodetect build rule
   my $target = "$project-linux";
-  my $file   = "$project-$version-linux.tgz";
-  $self->_build($target, $file);
+  $self->_build($target);
 }
 
 sub _windows_build {
@@ -56,8 +56,7 @@ sub _windows_build {
 
   # TODO autodetect build rule
   my $target = "$project-windows";
-  my $file   = "$project-$version-$cpu.zip";
-  $self->_build($target, $file, @options);
+  $self->_build($target, @options);
 }
 
 sub _osx_build {

@@ -16,10 +16,12 @@ sub execute {
   my $project = $self->app->project;
   my $version = $self->app->version;
 
-  # TODO implement
-  # unless ($self->has_build($version)) {
-  #   $self->build;
-  # }
+  unless ($self->app->has_build($version)) {
+    say STDERR "Incomplete bulid, aborting release";
+    return;
+  }
+
+  # TODO additional checks
 
   say STDERR "Publishing $project $version to github.";
   say STDERR 'Github publishing not yet implemented.';

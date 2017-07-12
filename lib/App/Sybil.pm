@@ -43,6 +43,29 @@ sub version {
   return $self->{version};
 }
 
+sub targets {
+  my ($self) = @_;
+
+  return qw(linux win32 win64);
+}
+
+sub output_file {
+  my ($self, $version, $target) = @_;
+
+  return $self->project . "-$version-$target." . ($target =~ /^win/ ? 'zip' : 'tgz');
+}
+
+sub has_build {
+  my ($self, $version) = @_;
+
+  foreach my $target ($self->targets) {
+    my $file = $self->output_file($version, $target);
+    return undef unless -e $file;
+  }
+
+  return 1;
+}
+
 1;
 
 __END__
