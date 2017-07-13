@@ -20,18 +20,10 @@ sub _build {
 
   if ($? == -1) {
     say STDERR 'Build failed';
-    return;
+    return undef;
   }
 
-  # TODO improve result name detection
-  my $file = $self->app->output_file($target, $self->app->version);
-  my $extension = substr $file, -3;
-  unless (copy("bazel-bin/$target.$extension", $file)) {
-    say STDERR "Copy $target.$extension failed: $!";
-    return;
-  }
-
-  say STDERR 'Build complete';
+  return 1;
 }
 
 sub _linux_build {
@@ -42,7 +34,16 @@ sub _linux_build {
 
   # TODO autodetect build rule
   my $target = "$project-linux";
-  $self->_build($target);
+  $self->_build($target) or return;
+
+  # TODO improve result name detection
+  my $file = "$project-$version-linux.tgz";
+  unless (copy("bazel-bin/$target.tgz", $file)) {
+    say STDERR "Copy bazel-bin/$target.tgz to $file failed: $!";
+    return;
+  }
+
+  say STDERR 'Build complete';
 }
 
 sub _windows_build {
@@ -56,7 +57,16 @@ sub _windows_build {
 
   # TODO autodetect build rule
   my $target = "$project-windows";
-  $self->_build($target, @options);
+  $self->_build($target, @options) or return;
+
+  # TODO improve result name detection
+  my $file = "$project-$version-$cpu.zip";
+  unless (copy("bazel-bin/$target.zip", $file)) {
+    say STDERR "Copy bazel-bin/$target.zip to $file failed: $!";
+    return;
+  }
+
+  say STDERR 'Build complete';
 }
 
 sub _osx_build {

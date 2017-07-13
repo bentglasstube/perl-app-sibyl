@@ -60,7 +60,10 @@ sub has_build {
 
   foreach my $target ($self->targets) {
     my $file = $self->output_file($version, $target);
-    return undef unless -e $file;
+    unless (-e $file) {
+      say STDERR "Missing build artifact $file";
+      return undef;
+    }
   }
 
   return 1;
