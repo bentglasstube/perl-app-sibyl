@@ -6,7 +6,6 @@ use v5.12;
 
 use App::Sybil -command;
 
-use Capture::Tiny ':all';
 use File::Copy;
 
 sub abstract { 'Build your software' }
