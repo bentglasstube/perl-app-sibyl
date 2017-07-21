@@ -8,7 +8,6 @@ use App::Sybil -command;
 
 use Capture::Tiny ':all';
 use File::Slurp;
-use IO::Prompt::Simple 'prompt';
 use Net::GitHub;
 
 sub abstract { 'Release your software' }
@@ -31,7 +30,11 @@ sub execute {
   say STDERR "Publishing $project $version to github.";
 
   # TODO have setup command to get oauth token
-  my $token  = prompt('GitHub access token');
+  my $token  = $self->app->github_token();
+  unless ($token) {
+    say STDERR "No github oauth token available, try `sybil auth`";
+    return;
+  }
   my $github = Net::GitHub->new(
     version      => 3,
     access_token => $token,

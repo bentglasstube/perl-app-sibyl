@@ -9,6 +9,7 @@ our $VERSION = '0.01';
 use App::Cmd::Setup -app;
 
 use Capture::Tiny ':all';
+use File::Slurp;
 use File::Spec;
 
 sub _get_project_from_path {
@@ -67,6 +68,34 @@ sub has_build {
   }
 
   return 1;
+}
+
+sub local_config { return '.sybilrc'; }
+sub global_config { return File::Spec->catfile($ENV{HOME}, '.sybilrc'); }
+
+sub _write_token {
+  my ($self, $token) = @_;
+
+  write_file($self->global_config, $token);
+}
+
+sub _read_token {
+  my ($self) = @_;
+
+  if (-f $self->local_config) {
+    return read_file($self->local_config);
+  } elsif (-f $self->global_config) {
+    return read_file($self->global_config);
+  }
+
+  return undef;
+}
+
+sub github_token {
+  my ($self) = @_;
+
+  $self->{token} ||= $self->_read_token();
+  return $self->{token};
 }
 
 1;
