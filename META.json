@@ -55,16 +55,16 @@
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "web" : "https://github.com/bentglasstube/app-sybil/issues"
+         "web" : "https://github.com/bentglasstube/perl-app-sybil/issues"
       },
-      "homepage" : "https://github.com/bentglasstube/app-sybil",
+      "homepage" : "https://github.com/bentglasstube/perl-app-sybil",
       "repository" : {
          "type" : "git",
-         "url" : "https://github.com/bentglasstube/app-sybil.git",
-         "web" : "https://github.com/bentglasstube/app-sybil"
+         "url" : "https://github.com/bentglasstube/perl-app-sybil.git",
+         "web" : "https://github.com/bentglasstube/perl-app-sybil"
       }
    },
-   "version" : "0.1",
+   "version" : "0.2",
    "x_serialization_backend" : "Cpanel::JSON::XS version 3.0233"
 }
 
