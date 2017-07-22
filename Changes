@@ -1,6 +1,7 @@
 Revision history for App-Sybil
 
 {{$NEXT}}
+ * Fix metadata issues
 
 0.1  2017-07-21 16:59:27 PDT
         - Initial release
