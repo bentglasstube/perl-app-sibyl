@@ -39,7 +39,10 @@
          "requires" : {
             "App::Cmd" : "0.331",
             "Capture::Tiny" : "0.46",
+            "File::Slurp" : "9999.19",
             "File::Spec" : "3.62",
+            "IO::Prompt::Simple" : "0.06",
+            "Net::GitHub" : "0.87",
             "perl" : "5.012000"
          }
       },
@@ -61,7 +64,7 @@
          "web" : "https://github.com/bentglasstube/app-sybil"
       }
    },
-   "version" : "0.01",
+   "version" : "0.1",
    "x_serialization_backend" : "Cpanel::JSON::XS version 3.0233"
 }
 
