@@ -18,13 +18,55 @@ sub execute {
     return;
   }
 
-  say STDERR "Interactive auth not yet implemented.  Please go to";
-  say STDERR "http://github.com/settings/tokens and create a personal access";
-  say STDERR "token for sybil and enter it below.";
+  # TODO hide password when typing
+  my $user = prompt('GitHub Username');
+  my $pass = prompt('GitHub Password');
 
-  my $token = prompt('Personal Access Token');
+  my $github = Net::GitHub->new(
+    version => 3,
+    login => $user,
+    pass => $pass,
+  );
 
-  $self->app->_write_token($token);
+  eval { $github->user->show(); };
+
+  if ($@ =~ /OTP/) {
+    my $otp = prompt('Authenticator code');
+
+    $github = Net::GitHub->new(
+      version => 3,
+      login => $user,
+      pass => $pass,
+      otp => $otp,
+    );
+  }
+
+  eval { $github->user->show(); };
+
+  if ($@) {
+    say STDERR "Authentication error: $@";
+    return;
+  }
+
+  my $auth;
+  eval {
+    $auth = $github->oauth->create_authorization({
+      scopes => ['repo'],
+      note => 'sybil',
+    });
+  };
+
+  if ($@) {
+    say STDERR "Unable to generate token: $@";
+    return;
+  }
+
+  if (my $token = $auth->{token}) {
+    $self->app->_write_token($token);
+    say STDERR 'Authentication token stored';
+  } else {
+    say STDERR 'Unable to create authentication token';
+  }
 }
 
 1;
