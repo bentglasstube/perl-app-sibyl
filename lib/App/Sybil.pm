@@ -35,8 +35,8 @@ sub _build_linux {
 
   # TODO improve result name detection
   my $file = "$project-$version-linux.tgz";
-  unless (copy("bazel-bin/$target.tgz", $file)) {
-    say STDERR "Copy bazel-bin/$target.tgz to $file failed: $!";
+  unless (copy("bazel-bin/$target.tar.gz", $file)) {
+    say STDERR "Copy bazel-bin/$target.tar.gz to $file failed: $!";
     return undef;
   }
 
